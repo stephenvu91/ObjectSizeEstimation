@@ -5,6 +5,7 @@ import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import au.com.stephenvu.core_ml.ObjectDetector
+import au.com.stephenvu.objectsizeestimation.repo.ObjectDetectionRepository
 import au.com.stephenvu.objectsizeestimation.ui.model.ObjectSizeEstimationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class ObjectSizeEstimationViewModel @Inject constructor(
-    private val detector: ObjectDetector
+    private val repo: ObjectDetectionRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ObjectSizeEstimationState())
@@ -59,7 +60,7 @@ class ObjectSizeEstimationViewModel @Inject constructor(
                     0.5f
                 }
 
-                val objects = detector.detectObjects(imageProxy, confidenceThreshold = threshold)
+                val objects = repo.detect(imageProxy, threshold = threshold)
                 _state.update {
                     it.copy(
                         objectSizeEstimationObjects = objects,
@@ -84,6 +85,6 @@ class ObjectSizeEstimationViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        detector.close()
+        repo.close()
     }
 }
