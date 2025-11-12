@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ObjectSizeEstimation"
 include(":app")
- 
+include(":core-ml")

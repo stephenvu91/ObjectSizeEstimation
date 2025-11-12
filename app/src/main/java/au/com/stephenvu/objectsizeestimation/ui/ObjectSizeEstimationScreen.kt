@@ -50,21 +50,17 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import au.com.stephenvu.objectsizeestimation.ml.FrameAnalyzer
-import au.com.stephenvu.objectsizeestimation.ml.ObjectDetector
+import au.com.stephenvu.core_ml.FrameAnalyzer
+import au.com.stephenvu.core_ml.models.ObjectSizeEstimationObject
 import java.util.concurrent.Executors
 
 /**
  * Main screen of the app
  */
 @Composable
-fun ObjectSizeEstimationScreen() {
+fun ObjectSizeEstimationScreen(viewModel: ObjectSizeEstimationViewModel) {
     val context = LocalContext.current
-    val detector = remember { ObjectDetector(context) }
-    val viewModel: ObjectSizeEstimationViewModel = viewModel(
-        factory = DetectionViewModelFactory(detector)
-    )
+
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val permissionLauncher = rememberLauncherForActivityResult(

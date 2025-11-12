@@ -3,20 +3,24 @@ package au.com.stephenvu.objectsizeestimation.ui
 import android.os.Build
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import au.com.stephenvu.objectsizeestimation.ml.ObjectDetector
+import au.com.stephenvu.core_ml.ObjectDetector
+import au.com.stephenvu.objectsizeestimation.ui.model.ObjectSizeEstimationState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Collections.emptyList
+import javax.inject.Inject
 
 /**
  * Main screen ViewModel that utilises MVI pattern and State Flow for UI updating
  */
-class ObjectSizeEstimationViewModel(
+@HiltViewModel
+class ObjectSizeEstimationViewModel @Inject constructor(
     private val detector: ObjectDetector
 ) : ViewModel() {
 
@@ -56,7 +60,6 @@ class ObjectSizeEstimationViewModel(
                 }
 
                 val objects = detector.detectObjects(imageProxy, confidenceThreshold = threshold)
-
                 _state.update {
                     it.copy(
                         objectSizeEstimationObjects = objects,
@@ -82,17 +85,5 @@ class ObjectSizeEstimationViewModel(
     override fun onCleared() {
         super.onCleared()
         detector.close()
-    }
-}
-
-class DetectionViewModelFactory(
-    private val detector: ObjectDetector
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ObjectSizeEstimationViewModel::class.java)) {
-            return ObjectSizeEstimationViewModel(detector) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

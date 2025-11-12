@@ -1,4 +1,4 @@
-package au.com.stephenvu.objectsizeestimation.ml
+package au.com.stephenvu.core_ml
 
 import android.os.Build
 import androidx.camera.core.ImageAnalysis
